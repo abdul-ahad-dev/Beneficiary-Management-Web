@@ -29,19 +29,24 @@ export default function RegisterBeneficiary() {
         depart: "",
         purpose: "",
     });
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
     const naviagte = useNavigate()
 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
-    }
+    };
+
+
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        
         try {
             setIsLoading(true);
-            const response = await axios.post('http://localhost:4040/seeker/register', formData);
+        
+            const response = await axios.post('https://beneficiary-management-web-backend.vercel.app/seeker/register', formData);
+           
             Swal.fire({
                 title: "Success",
                 text: "Appoinment Successfully Created",
@@ -49,9 +54,6 @@ export default function RegisterBeneficiary() {
                 showConfirmButton: false,
                 timer: 1500
             });
-
-            const token = response.data.token;
-            setQrToken(token);
 
             setIsLoading(false);
             formData.address = "",
@@ -65,11 +67,11 @@ export default function RegisterBeneficiary() {
             const errorMessage = error.message;
             Swal.fire({
                 title: "Something Wrong",
-                text: errorMessage,
+                text: error.response.data.msg,
                 icon: "error"
             });
             setIsLoading(false);
-            console.error('Error sending data:', error);
+            console.error('Error sending data:', errorMessage);
         }
     }
 
@@ -119,7 +121,7 @@ export default function RegisterBeneficiary() {
                     {
                         isLoading ?
                             <div
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 cursor-not-allowed"
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black-600 hover:bg-black-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black-500 cursor-not-allowed"
                                 aria-disabled
                                 role="status"
                             >
@@ -145,8 +147,6 @@ export default function RegisterBeneficiary() {
                             <Button type="submit">Register and Generate Token</Button>
                     }
                 </form>
-
-
 
                 <Card className="flex mt-10 justify-center">
                     <Button variant="link" onClick={() => naviagte("/")}>

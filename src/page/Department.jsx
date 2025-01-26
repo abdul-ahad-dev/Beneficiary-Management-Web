@@ -1,35 +1,18 @@
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import axios, { all } from "axios"
+import axios from "axios"
 import { SeekerCard } from "../components/SeekerCard"
 import Swal from "sweetalert2"
-
-// Mock data for demonstration purposes
-const MOCK_DEPARTMENTS = [
-    "Financial Aid",
-    "Medical Assistance",
-    "Education Support",
-    "Food Distribution",
-    "Job Training",
-]
-const MOCK_STATUSES = ["Pending", "Approved", "Rejected"]
 
 
 export default function Department() {
     const [department, setDepartment] = useState(null)
     const [seekers, setSeekers] = useState([])
-    const [searchTerm, setSearchTerm] = useState("")
-
 
     const getSeekers = () => {
-        axios.get('http://localhost:4040/seeker')
+        axios.get('https://beneficiary-management-web-backend.vercel.app/seeker')
             .then((response) => {
-                const allSeekers = response.data.seeker;
-                console.log(allSeekers)
+                const allSeekers = response.data.seeker
+                console.log(allSeekers);
                 const filtered = allSeekers.filter(seeker => seeker.depart === department);
                 setSeekers(filtered);
             })
@@ -44,14 +27,11 @@ export default function Department() {
             try {
                 const department = await localStorage.getItem('depart');
                 console.log("depart", department);
-
                 setDepartment(department);
-
             } catch (error) {
                 console.error('Error during fetching:', error);
             }
         };
-
         fetchData();
     }, []);
 
@@ -60,12 +40,12 @@ export default function Department() {
         if (department) {
             getSeekers();
         }
-    }, [department]);
+    }, []);
 
-    
+
     const handleStatusUpdate = async (seekerId, newStatus) => {
         try {
-            const response = await axios.put('http://localhost:4040/seeker/update-status', { _id: seekerId, status: newStatus });
+            const response = await axios.put('https://beneficiary-management-web-backend.vercel.app/seeker/update-status', { _id: seekerId, status: newStatus });
             Swal.fire({
                 title: "Success",
                 text: "Successfully Updated",
@@ -73,7 +53,7 @@ export default function Department() {
                 showConfirmButton: false,
                 timer: 1500
             });
-            
+            console.log(response);
             getSeekers()
         } catch (error) {
             const errorMessage = error.message;

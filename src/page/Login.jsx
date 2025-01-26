@@ -7,16 +7,17 @@ import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import Swal from "sweetalert2"
 
+
 export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const naviagte = useNavigate()
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        
+        e.preventDefault();
+
         try {
-            const response = await axios.post('http://localhost:4040/auth/login', { email, password });
+            const response = await axios.post("https://beneficiary-management-web-backend.vercel.app/auth/login", { email, password });
             Swal.fire({
                 title: "Success",
                 text: "Successfully Created",
@@ -40,12 +41,14 @@ export default function Login() {
             console.log('Response:', response.data);
         } catch (error) {
             const errorMessage = error.message;
-            Swal.fire({
-                title: "Something Wrong",
-                text: errorMessage,
-                icon: "error"
-            });
-            console.error('Error sending data:', error);
+            console.log(errorMessage);
+            if (error.response) {
+                Swal.fire({
+                    title: "Something Wrong",
+                    text: error.response.data.msg,
+                    icon: "error"
+                });
+            }
         }
     }
 
@@ -53,7 +56,7 @@ export default function Login() {
         <div className="min-h-screen bg-gray-100 flex items-center justify-center">
             <Card className="w-full max-w-md">
                 <CardHeader>
-                    <CardTitle>Login</CardTitle>
+                    <CardTitle>Login{import.meta.env.API}</CardTitle>
                     <CardDescription>Enter your credentials to access the system</CardDescription>
                 </CardHeader>
                 <CardContent>
