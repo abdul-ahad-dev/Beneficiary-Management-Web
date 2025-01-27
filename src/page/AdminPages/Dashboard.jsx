@@ -21,7 +21,7 @@ export default function Dashboard() {
     useEffect(() => {
         const fetchDepartmentData = async () => {
             try {
-                const response = await axios.get('http://localhost:4040/seeker/depart-wise');
+                const response = await axios.get('https://beneficiary-management-web-backend.vercel.app/seeker/depart-wise');
                 const data = response.data;
 
                 setDepartmentCounts(data); // Set department-wise data for the chart
